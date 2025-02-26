@@ -1,0 +1,34 @@
+.navbar {
+    background-color: #343a40;
+    color: white;
+}
+
+.navbar-brand {
+    color: white;
+}
+
+.navbar a {
+    color: white;
+    margin-right: 15px;
+}
+
+.navbar a:hover {
+    color: #adb5bd;
+}
+
+.form-control {
+    border-radius: 10px;
+    width: 100%; /* Adjust the width to make the search bar longer */
+}
+
+
+
+
+/* <nav class="navbar navbar-light bg-light px-4">
+    <a class="navbar-brand" href="#">Logo</a>
+    <div>
+      <a href="#" class="me-3">Feed</a>
+      <a href="#">Home</a>
+    </div>
+    <input type="text" class="form-control w-25" placeholder="Search...">
+</nav> */
