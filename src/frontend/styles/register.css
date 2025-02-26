@@ -1,0 +1,180 @@
+body {
+    background-image: url("../../../Images/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
+  /* Layout */
+  .container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  
+  .min-vh-100 {
+    min-height: 100vh;
+  }
+  
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+  
+  .justify-content-center {
+    justify-content: center;
+  }
+  
+  .align-items-center {
+    align-items: center;
+  }
+  
+  /* Column layouts */
+  .col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  
+  @media (min-width: 768px) {
+    .col-md-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .col-lg-5 {
+      flex: 0 0 41.666667%;
+      max-width: 41.666667%;
+    }
+  }
+  
+  /* Card style */
+  .card {
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+    background-color: #fff;
+  }
+  
+  /* Text */
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-decoration-none {
+    text-decoration: none;
+  }
+  
+  /* Margins */
+  .mb-3 {
+    margin-bottom: 1rem;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .w-100 {
+    width: 100%;
+  }
+  
+  /* Form style */
+  .form-label {
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 0.25rem;
+    display: block;
+  }
+  
+  .form-control {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .form-control:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+    outline: none;
+  }
+  
+  .form-control-lg {
+    font-size: 1.125rem;
+  }
+  
+  /* Button style*/
+  .btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    margin-top: 1rem;
+  }
+  
+  .btn-primary {
+    background-color: #090909;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    color: #fff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #3b3b3b;
+    transform: translateY(-1px);
+  }
+  
+  /* Typography */
+  h2 {
+    color: #2d3748;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+  
+  h4 {
+    color: #4a5568;
+    margin-bottom: 1rem;
+  }
+  
+  /* Link style */
+  a {
+    color: #4299e1;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: #3182ce;
+  }
+  
+  /* Additional custom styles */
+  .text-muted {
+    color: #718096 !important;
+  }
+  
+  .sign-in-text {
+    margin-top: 2rem;
+  }
+
+  .gap-3 {
+    gap: 1rem;
+  }
+  .d-flex {
+    display: flex;
+  }
+ 
