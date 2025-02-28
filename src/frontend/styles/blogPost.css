@@ -1,0 +1,54 @@
+body {
+    background-image: url("../../../Images/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #000000;
+}
+.blog-container {
+    max-width: 900px;
+    margin: auto;
+    background: rgba(254, 254, 254, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 50px;
+}
+.blog-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+.blog-meta {
+    font-size: 1rem;
+    color: #000000;
+}
+.blog-content {
+    margin-top: 20px;
+    line-height: 1.8;
+}
+
+.img-fluid {
+    width: 100%;
+    height: 20em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.related-articles{
+    max-width: 900px;
+    margin: auto;
+    background: rgba(254, 254, 254, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px; 
+}
+.list-group-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: gray;
+}
+.list-group-item a {
+    color: rgb(216, 24, 24);
+}
