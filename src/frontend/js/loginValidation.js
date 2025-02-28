@@ -30,7 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (isValid) {
-            window.location.href = 'userDash.html';
+            const isAdmin = email.value.toLowerCase().includes('admin');
+            localStorage.setItem('userRole', isAdmin ? 'admin' : 'author');
+            window.location.href = isAdmin ? 'adminDash.html' : 'userDash.html';
         } else {
             alert(errorMessage);
         }
