@@ -1,0 +1,53 @@
+.profile-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+}
+.profile-picture {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: inline-block;
+    margin-bottom: 20px;
+     
+}
+.profile-picture img {
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 25%;
+}
+.profile-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 20px;
+}
+.profile-stats span {
+    font-weight: bold;
+    display: block;
+}
+.follow-btn {
+    margin-top: 20px;
+    width: 6em; 
+}
+.posts-container {
+    margin-top: 10px;
+}
+.post {
+    width: 100%;
+    height: 9rem; 
+    display: inline-block;
+    margin: auto;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    background-color: #f9f9f9;
+    position: relative; /* Add this to position the like image */
+}
