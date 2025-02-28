@@ -5,6 +5,8 @@
 
 .navbar-brand {
     color: white;
+    width: 75px;
+    height: 75px;
 }
 
 .navbar a {
