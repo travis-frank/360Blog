@@ -52,10 +52,10 @@
 }
 
 .btn-secondary {
-    background-color: #1a3c40;
+    background-color: #000000;
     border: none;
 }
 
 .btn-secondary:hover {
-    background-color: #2a4c50;
+    background-color: #000000;
 }
