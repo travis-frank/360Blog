@@ -21,13 +21,11 @@ if ($conn->query($sql) === TRUE) {
     die("Error creating database: " . $conn->error);
 }
 
-// Select the database
 $conn->select_db($database);
 
-// Define SQL queries for table creation
 $tables = [
     "CREATE TABLE IF NOT EXISTS users (
-        user_id        INT AUTO_INCREMENT PRIMARY KEY,
+        user_id       INT AUTO_INCREMENT PRIMARY KEY,
         name          VARCHAR(100) NOT NULL,
         email         VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
@@ -39,11 +37,13 @@ $tables = [
     "CREATE TABLE IF NOT EXISTS posts (
         post_id      INT AUTO_INCREMENT PRIMARY KEY,
         user_id      INT NOT NULL,
+       
         title        VARCHAR(255) NOT NULL,
         content      TEXT NOT NULL,
         created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         is_deleted   BOOLEAN DEFAULT FALSE,
+       
         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
     )",
     "CREATE TABLE IF NOT EXISTS comments (
@@ -60,7 +60,6 @@ $tables = [
         session_id    VARCHAR(255) PRIMARY KEY,
         user_id       INT NOT NULL,
         created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        expires_at    TIMESTAMP NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
     )",
     "CREATE TABLE IF NOT EXISTS admin_actions (
@@ -102,10 +101,6 @@ foreach ($tables as $query) {
         echo "Error creating table: " . $conn->error . "<br>";
     }
 }
-
-// Display success message if all tables are created successfully
-echo "Database setup completed successfully.";
-
 // Close the connection
 $conn->close();
 
