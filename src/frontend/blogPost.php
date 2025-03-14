@@ -1,9 +1,62 @@
+<?php
+include('php/DBConnect.php');
+
+$post_id = 3;
+
+if ($post_id) {
+    // Fetch post details including the image path
+    $stmt = $conn->prepare("SELECT posts.title, posts.content, posts.created_at, users.name AS author
+                            FROM posts 
+                            JOIN users ON posts.user_id = users.user_id 
+                            WHERE posts.post_id = ?");
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $post = $result->fetch_assoc();
+    $stmt->close();
+
+    // Check if post exists
+    if (!$post) {
+        echo "<h2>Post not found.</h2>";
+        exit();
+    }
+} else {
+    echo "<h2>Invalid request: No post ID provided.</h2>";
+    exit();
+}
+
+$conn->close();include('php/DBConnect.php');
+
+$post_id = $_GET['post_id'] ?? null;
+
+if (!$post_id) {
+    echo "<h2>Invalid request: No post ID provided.</h2>";
+    exit();
+}
+
+$stmt = $conn->prepare("SELECT posts.title, posts.content, posts.created_at, users.name AS author 
+                        FROM posts 
+                        JOIN users ON posts.user_id = users.user_id 
+                        WHERE posts.post_id = ?");
+$stmt->bind_param("i", $post_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$post = $result->fetch_assoc();
+$stmt->close();
+$conn->close();
+
+if (!$post) {
+    echo "<h2>Post not found.</h2>";
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Post</title>
+    <title><?php echo htmlspecialchars($post['title']); ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles/blogPost.css">
     <link rel="stylesheet" href="styles/nav.css">
@@ -17,7 +70,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="feed.html">Feed</a>
+                    <a class="nav-link" href="feed.php">Feed</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="frontPage.html">Home</a>
@@ -36,46 +89,21 @@
     </nav>
 
     <div class="blog-container">
-        <h1 class="blog-title">The Art of Blogging: A Guide to Creating Engaging Content</h1>
+        <h1 class="blog-title"><?php echo htmlspecialchars($post['title']); ?></h1>
         <p class="blog-meta">
-            By <strong>User Name</strong>
+            By <strong><?php echo htmlspecialchars($post['author']); ?></strong>
             <img src="../../Images/person.svg" class="rounded-circle ms-2" alt="User Profile Picture" width="30" height="30">
             <button class="btn btn-sm btn-primary ms-2">Follow</button>
         </p>
-        <p class="blog-meta">Published on <strong>February 28, 2025</strong></p>
-        <img src="../../Images/blog-banner.jpg" class="img-fluid my-4" alt="Blog Banner">
+        <p class="blog-meta">Published on <strong><?php echo date("F j, Y", strtotime($post['created_at'])); ?></strong></p>
+
+        <!-- Display Image if Exists -->
+        <?php if (!empty($post['image_path'])): ?>
+            <img src="<?php echo htmlspecialchars($post['image_path']); ?>" class="img-fluid my-4" alt="Blog Banner">
+        <?php endif; ?>
+
         <hr>
-        <p>Blogging is a powerful way to share knowledge, express opinions, and build a community. Whether you're a seasoned writer or just starting, creating engaging content requires strategy, creativity, and consistency.</p>
-        
-        <h2>Understanding Your Audience</h2>
-        <p>Before writing, research your audience. What topics interest them? What problems do they need solutions for? Knowing your audience helps shape content that resonates and keeps readers coming back.</p>
-        
-        <h2>Crafting Compelling Headlines</h2>
-        <p>The headline is the first thing people see. A strong headline grabs attention, sparks curiosity, and encourages clicks. Use power words, numbers, or questions to make it stand out.</p>
-        
-        <h2>Writing Engaging Content</h2>
-        <p>Good blog posts are structured well, easy to read, and informative. Use short paragraphs, bullet points, and subheadings to break up text. Incorporate storytelling to make posts more relatable and compelling.</p>
-        
-        <h2>Optimizing for SEO</h2>
-        <p>Search engine optimization (SEO) helps your content reach a wider audience. Use relevant keywords, meta descriptions, and internal linking to improve visibility on search engines.</p>
-        
-        <h2>Adding Visuals</h2>
-        <p>Images, infographics, and videos enhance readability and engagement. They break up long blocks of text and make information easier to digest.</p>
-        
-        <h2>Encouraging Engagement</h2>
-        <p>Encourage comments and discussions by asking questions or inviting opinions. Responding to comments fosters a sense of community and connection with readers.</p>
-        
-        <h2>Consistency and Promotion</h2>
-        <p>Posting consistently helps build an audience. Promote your blog on social media, email newsletters, and collaborations with other bloggers to expand your reach.</p>
-        
-        <h2>Conclusion</h2>
-        <p>Blogging is an art that blends creativity, research, and engagement. By understanding your audience, crafting compelling content, and optimizing for visibility, you can create a blog that attracts and retains readers.</p>
-        
-        <div class="blog-footer mt-4 p-3 bg-light text-dark rounded">
-            <p><strong>Author:</strong> User Name</p>
-            <p><strong>Categories:</strong> Blogging, Content Creation, SEO, Marketing</p>
-        </div>
-        
+        <p><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
     </div>
 
     <div class="comment-container">
@@ -83,7 +111,6 @@
         <div class="comment-section">
             <form class="mb-4">
                 <div class="mb-3">
-
                     <textarea class="form-control" id="commentText" rows="3" placeholder="Your comment"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
@@ -106,7 +133,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="related-articles mt-4">
         <h3>Related Articles</h3>
         <ul class="list-group">
@@ -124,8 +151,6 @@
             </li>
         </ul>
     </div>
-
-   
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
