@@ -58,7 +58,7 @@ input.form-control.search-bar {
     width: auto; /* Keep the search bar size unchanged */
 }
 
-input.form-control:not(.search-bar), #mb-2 {
+input.form-control:not(.search-bar):not(.profile_picture), #mb-2 {
     border-radius: 10px;
     width: 45em; /* Changed from 500px to 700px */
 }
@@ -66,6 +66,10 @@ input.form-control:not(.search-bar), #mb-2 {
 input.form-control #form-control-search-bar {
     border-radius: 10px;
     width: 100%;
+}
+
+input.form-control[type=file]{
+    max-width: 15rem ; /* Set the maximum width to 10px */
 }
 
 .account-button {

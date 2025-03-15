@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['logged_in'] = true;
 
             error_log("Session Data: " . json_encode($_SESSION));
-            header("Location: ../userDash.html");
+            header("Location: ../userDash.php");
             exit();
         } else {
             error_log("Password did NOT match.");

@@ -30,6 +30,7 @@ $tables = [
         email         VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
         profile_image LONGBLOB DEFAULT NULL,
+        bio           TEXT NOT NULL DEFAULT 'No bio',
         role          ENUM('user', 'admin') DEFAULT 'user',
         is_active     BOOLEAN DEFAULT TRUE,
         created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -37,9 +38,10 @@ $tables = [
     "CREATE TABLE IF NOT EXISTS posts (
         post_id      INT AUTO_INCREMENT PRIMARY KEY,
         user_id      INT NOT NULL,
-       
+
         image_id     INT NOT NULL,
         title        VARCHAR(255) NOT NULL,
+        description  TEXT DEFAULT NULL,
         content      TEXT NOT NULL,
         created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
