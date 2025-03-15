@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->execute()) {
         $_SESSION['success'] = "Registration successful! Please log in.";
-        header("Location: ../userDash.html");
+        header("Location: ../userDash.php");
         exit();
     } else {
         $_SESSION['error'] = "Database error: " . $stmt->error;
