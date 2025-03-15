@@ -19,12 +19,18 @@
             <h2>Login</h2>
           </div>
 
-          <form id="loginForm" method="POST">
+          <!-- Display error messages if any -->
+          <?php session_start(); if(isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger text-center">
+              <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+            </div>
+          <?php endif; ?>
+
+          <form id="loginForm" method="POST" action="php/validate.php">
             <!-- Email -->
             <div class="form-group">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" name="email" 
-                placeholder="example@email.com" required />
+              <input type="email" class="form-control" id="email" name="email" placeholder="example@email.com" required />
             </div>
 
             <!-- Password -->
@@ -38,8 +44,7 @@
 
             <div class="text-center">
               <p class="sign-in-text">
-                Don't have an account?
-                <a href="register.html">Sign up</a>
+                Don't have an account? <a href="register.html">Sign up</a>
               </p>
             </div>
           </form>

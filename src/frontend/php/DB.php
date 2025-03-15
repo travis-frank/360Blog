@@ -29,7 +29,7 @@ $tables = [
         name          VARCHAR(100) NOT NULL,
         email         VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
-        profile_image VARCHAR(255) DEFAULT NULL,
+        profile_image LONGBLOB DEFAULT NULL,
         role          ENUM('user', 'admin') DEFAULT 'user',
         is_active     BOOLEAN DEFAULT TRUE,
         created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -38,12 +38,14 @@ $tables = [
         post_id      INT AUTO_INCREMENT PRIMARY KEY,
         user_id      INT NOT NULL,
        
+        image_id     INT NOT NULL,
         title        VARCHAR(255) NOT NULL,
         content      TEXT NOT NULL,
         created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         is_deleted   BOOLEAN DEFAULT FALSE,
        
+        FOREIGN KEY (image_id) REFERENCES images(image_id) ON DELETE CASCADE,
         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
     )",
     "CREATE TABLE IF NOT EXISTS comments (
