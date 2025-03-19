@@ -65,6 +65,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     if ($stmt->execute()) {
         header("Location: ../blogPost.php?post_id=" . $stmt->insert_id);
+
         exit();
     } else {
         error_log("Execute Failed: " . $stmt->error);
