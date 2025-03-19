@@ -36,7 +36,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $stmt = $conn -> prepare("INSERT INTO posts (user_id, title, content) VALUES(?,?,?)");
     $stmt->bind_param("iss", $user_id,  $title, $content);
     if ($stmt->execute()) {
-        echo "Successfully created post."; 
+        header("Location: ../blogPost.php?postid=" . $stmt-> insert_id);
         exit();
     } else {
         echo "Error: Unable to create post.";
