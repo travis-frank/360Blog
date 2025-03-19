@@ -1,49 +1,77 @@
 <?php
-include('DBConnect.php');
-$user_id = 1;
+session_start();
+include_once 'DBConnect.php';
+
+// Enable error reporting
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../login.php');
+    exit();
+}
+
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-    $title = $conn ->real_escape_string($_POST["title"]);
-    $category = $conn ->real_escape_string($_POST["category"]);
-    $content = $conn ->real_escape_string($_POST["content"]);
+    $user_id = $_SESSION['user_id'];
+    $title = trim($_POST["title"]);
+    $category = trim($_POST["category"]);
+    $content = trim($_POST["content"]);
 
-    $imagePath = null;
+    // Validate inputs
+    if (empty($title) || empty($category) || empty($content)) {
+        echo "All fields are required.";
+        exit();
+    }
+
     // Handle image upload
-    $image_id = NULL; // Default NULL if no image is uploaded
-    if (!empty($_FILES['image']['name'])) {
-        $target_dir = "uploads/"; // Ensure this directory exists
-        $image_name = basename($_FILES["image"]["name"]);
-        $target_file = $target_dir . time() . "_" . $image_name; // Unique name
+    $imageData = NULL;
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $allowedFormats = ["jpg", "jpeg", "png", "gif"];
+        $imageFileType = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
 
-        // Check if image is valid
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        $valid_formats = ["jpg", "jpeg", "png", "gif"];
-        if (!in_array($imageFileType, $valid_formats)) {
-            die("Error: Only JPG, JPEG, PNG & GIF files allowed.");
+        if (!in_array($imageFileType, $allowedFormats)) {
+            echo "Invalid image format. Only JPG, JPEG, PNG, and GIF are allowed.";
+            exit();
         }
 
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            // Insert image reference in `images` table
-            $stmt = $conn->prepare("INSERT INTO images (image_path) VALUES (?)");
-            $stmt->bind_param("s", $target_file);
-            if ($stmt->execute()) {
-                $image_id = $stmt->insert_id; // Get inserted image ID
-            }
-            $stmt->close();
+        // Read image as binary
+        $imageData = file_get_contents($_FILES['image']['tmp_name']); 
+
+        // Debugging: Log if file reading fails
+        if ($imageData === false) {
+            error_log("Error reading uploaded image file.");
+            echo "Error reading image file.";
+            exit();
         }
     }
 
+    // Prepare SQL query
+    $stmt = $conn->prepare("INSERT INTO posts (user_id, title, category, content, banner_image) VALUES (?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        error_log("SQL Prepare Failed: " . $conn->error);
+        die("SQL Prepare Failed: " . $conn->error);
+    }
 
-    $stmt = $conn -> prepare("INSERT INTO posts (user_id, title, content) VALUES(?,?,?)");
-    $stmt->bind_param("iss", $user_id,  $title, $content);
+    if ($imageData === NULL) {
+        $stmt->bind_param("isss", $user_id, $title, $category, $content);
+    } else {
+        // Bind parameters without image first
+        $stmt->bind_param("isssb", $user_id, $title, $category, $content, $null);
+
+        // Send image data separately
+        $stmt->send_long_data(4, $imageData);
+    }
+
     if ($stmt->execute()) {
-        echo "Successfully created post."; 
+        header("Location: ../blogPost.php?post_id=" . $stmt->insert_id);
         exit();
     } else {
+        error_log("Execute Failed: " . $stmt->error);
         echo "Error: Unable to create post.";
     }
+
     $stmt->close();
 }
 $conn->close();
-
-
 ?>

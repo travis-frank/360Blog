@@ -13,7 +13,7 @@
     include_once 'php/DBConnect.php';
 
     $user_id = $_SESSION['user_id'];
-    $query = $conn->prepare("SELECT name, email, bio, password_hash, profile_image FROM users WHERE user_id = ?");
+    $query = $conn->prepare("SELECT name, email, bio, password, profile_image FROM users WHERE user_id = ?");
     $query->bind_param("i", $user_id);
     $query->execute();
     $result = $query->get_result();
@@ -49,7 +49,7 @@
                 <li class="nav-item"><a class="nav-link" href="feed.php">Feed</a></li>
                 <li class="nav-item"><a class="nav-link" href="frontPage.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="userDash.php">Profile</a></li>
-                <li class="nav-item"><a class="nav-link" href="createPost.php">Create Post</a></li>
+                <li class="nav-item"><a class="nav-link" href="createPost.html">Create Post</a></li>
             </ul>
             <a class="btn btn-danger" href="logout.php">Logout</a>
             <form class="d-flex">
@@ -91,7 +91,7 @@
                         </div>
                         <div class="mb-2">
                             <label>Password:</label>
-                            <input type="password" name="password" class="form-control" value="<?php echo htmlspecialchars($user['password_hash']); ?>">
+                            <input type="password" name="password" class="form-control" value="<?php echo htmlspecialchars($user['password']); ?>">
                         </div>
                         <div class="mb-2">
                             <label>Bio:</label>

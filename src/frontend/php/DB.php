@@ -28,7 +28,7 @@ $tables = [
         user_id       INT AUTO_INCREMENT PRIMARY KEY,
         name          VARCHAR(100) NOT NULL,
         email         VARCHAR(255) UNIQUE NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
+        password      VARCHAR(255) NOT NULL,
         profile_image LONGBLOB DEFAULT NULL,
         bio           TEXT NOT NULL DEFAULT 'No bio',
         role          ENUM('user', 'admin') DEFAULT 'user',
@@ -38,16 +38,13 @@ $tables = [
     "CREATE TABLE IF NOT EXISTS posts (
         post_id      INT AUTO_INCREMENT PRIMARY KEY,
         user_id      INT NOT NULL,
-
-        image_id     INT NOT NULL,
+        banner_image LONGBLOB DEFAULT NULL,
         title        VARCHAR(255) NOT NULL,
         description  TEXT DEFAULT NULL,
         content      TEXT NOT NULL,
         created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         is_deleted   BOOLEAN DEFAULT FALSE,
-       
-        FOREIGN KEY (image_id) REFERENCES images(image_id) ON DELETE CASCADE,
         FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
     )",
     "CREATE TABLE IF NOT EXISTS comments (
@@ -85,15 +82,6 @@ $tables = [
         FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
         FOREIGN KEY (comment_id) REFERENCES comments(comment_id) ON DELETE CASCADE,
         UNIQUE (user_id, post_id, comment_id)
-    )",
-    "CREATE TABLE IF NOT EXISTS images (
-        image_id    INT AUTO_INCREMENT PRIMARY KEY,
-        user_id     INT NULL,
-        post_id     INT NULL,
-        image_url   VARCHAR(255) NOT NULL,
-        uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-        FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE
     )"
 ];
 

@@ -1,31 +1,10 @@
 <?php
+session_start(); 
 include('php/DBConnect.php');
 
-$post_id = 3;
-
-if ($post_id) {
-    // Fetch post details including the image path
-    $stmt = $conn->prepare("SELECT posts.title, posts.content, posts.created_at, users.name AS author
-                            FROM posts 
-                            JOIN users ON posts.user_id = users.user_id 
-                            WHERE posts.post_id = ?");
-    $stmt->bind_param("i", $post_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $post = $result->fetch_assoc();
-    $stmt->close();
-
-    // Check if post exists
-    if (!$post) {
-        echo "<h2>Post not found.</h2>";
-        exit();
-    }
-} else {
-    echo "<h2>Invalid request: No post ID provided.</h2>";
-    exit();
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
-
-$conn->close();include('php/DBConnect.php');
 
 $post_id = $_GET['post_id'] ?? null;
 
@@ -34,13 +13,19 @@ if (!$post_id) {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT posts.title, posts.content, posts.created_at, users.name AS author 
+$stmt = $conn->prepare("SELECT posts.title, posts.content, posts.created_at, users.name AS author, posts.banner_image 
                         FROM posts 
                         JOIN users ON posts.user_id = users.user_id 
                         WHERE posts.post_id = ?");
+if (!$stmt) {
+    die("Prepare failed: " . $conn->error);
+}
 $stmt->bind_param("i", $post_id);
 $stmt->execute();
 $result = $stmt->get_result();
+if (!$result) {
+    die("Execute failed: " . $stmt->error);
+}
 $post = $result->fetch_assoc();
 $stmt->close();
 $conn->close();
@@ -98,8 +83,8 @@ if (!$post) {
         <p class="blog-meta">Published on <strong><?php echo date("F j, Y", strtotime($post['created_at'])); ?></strong></p>
 
         <!-- Display Image if Exists -->
-        <?php if (!empty($post['image_path'])): ?>
-            <img src="<?php echo htmlspecialchars($post['image_path']); ?>" class="img-fluid my-4" alt="Blog Banner">
+        <?php if (!empty($post['banner_image'])): ?>
+            <img src="data:image/jpeg;base64,<?php echo base64_encode($post['banner_image']); ?>" class="img-fluid my-4" alt="Blog Banner">
         <?php endif; ?>
 
         <hr>

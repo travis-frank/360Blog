@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare SQL query
-    $stmt = $conn->prepare("UPDATE users SET name = ?, email = ?, password_hash = ?, bio = ? WHERE user_id = ?");
+    $stmt = $conn->prepare("UPDATE users SET name = ?, email = ?, password = ?, bio = ? WHERE user_id = ?");
     if (!$stmt) {
         die("SQL Prepare Failed: " . $conn->error);
     }
