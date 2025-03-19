@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     error_log("Login Attempt: Email = " . $email);
 
     // Prepare and execute the query
-    $stmt = $conn->prepare("SELECT user_id, name, email, password_hash, role, is_active FROM users WHERE email = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT user_id, name, email, password, role, is_active FROM users WHERE email = ? LIMIT 1");
     if (!$stmt) {
         error_log("Query preparation failed: " . $conn->error);
         die("Query failed.");
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Check password (Ensure it's hashed in DB)
-        if ($password === $user['password_hash']) {
+        if ($password === $user['password']) {
             error_log("Password matched. Logging in user: " . $user['email']);
 
             // Set session variables

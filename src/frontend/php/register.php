@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare SQL query
-    $stmt = $conn->prepare("INSERT INTO users (name, email, password_hash, profile_image, role, is_active, create_at) 
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password, profile_image, role, is_active, created_at) 
     VALUES (?, ?, ?, ?, 'user', 1, NOW())");
 
     if (!$stmt) {
