@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: login.php"); // Redirect if not logged in
+        exit();
+    }
+?> 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,12 +26,26 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="feed.php">Feed</a></li>
-                <li class="nav-item"><a class="nav-link" href="frontPage.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="frontPage.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="userDash.php">Profile</a></li>
-                <li class="nav-item"><a class="nav-link active" href="createPost.html">Create Post</a></li>
+                <li class="nav-item"><a class="nav-link" href="createPost.php">Create Post</a></li>
+
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <li class="nav-item">
+                    <a class="nav-link fw-bold text-danger" href="php/logout.php">Logout</a>
+                </li>
+            <?php else: ?>
+                <li class="nav-item">
+                    <a class="nav-link fw-bold text-success" href="login.php">Login</a>
+                </li>
+            <?php endif; ?>
+
             </ul>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <span class="navbar-text text-white me-3">Welcome, <?= htmlspecialchars($_SESSION['name']) ?></span>
+            <?php endif; ?>
             <form class="d-flex">
-                <input type="text" class="form-control search-bar" name="search" placeholder="Search...">
+                <input type="text" class="form-control search-bar" placeholder="Search...">
             </form>
         </div>
     </nav>
