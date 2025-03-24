@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,6 +32,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="createPost.html">Create Post</a>
                 </li>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <li class="nav-item"><a class="nav-link" href="adminDash.php">Admin Dashboard</a></li>
+                <?php endif; ?>
             </ul>
             <form class="d-flex">
                 <input type="text" class="form-control search-bar" placeholder="Search...">

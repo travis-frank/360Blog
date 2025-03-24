@@ -25,6 +25,9 @@ session_start();
             <li class="nav-item"><a class="nav-link" href="frontPage.php">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="userDash.php">Profile</a></li>
             <li class="nav-item"><a class="nav-link" href="createPost.php">Create Post</a></li>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <li class="nav-item"><a class="nav-link" href="adminDash.php">Admin Dashboard</a></li>
+                <?php endif; ?>
 
         <?php if (isset($_SESSION['user_id'])): ?>
             <li class="nav-item">
