@@ -31,7 +31,7 @@ $result = $conn->query($sql);
                 <li class="nav-item"><a class="nav-link" href="createPost.php">Create Post</a></li>
                 
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                <li class="nav-item"><a class="nav-link" href="adminDash.html">Admin Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="adminDash.php">Admin Dashboard</a></li>
                 <?php endif; ?>
 
             <?php if (isset($_SESSION['user_id'])): ?>
