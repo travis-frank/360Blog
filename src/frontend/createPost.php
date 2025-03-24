@@ -4,6 +4,17 @@
         header("Location: login.php"); // Redirect if not logged in
         exit();
     }
+
+include 'php/DBConnect.php';
+$topics = [];
+$query = "SELECT topic FROM topics ORDER BY topic ASC";
+$result = $conn->query($query);
+
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $topics[] = $row['topic'];
+    }
+}
 ?> 
 
 <!DOCTYPE html>
@@ -63,11 +74,14 @@
             <div class="mb-3">
                 <label for="category" class="form-label">Category</label>
                 <select class="form-control" id="category" name="category" required>
-                    <option value="Blogging">Blogging</option>
-                    <option value="Content Creation">Content Creation</option>
-                    <option value="SEO">SEO</option>
-                    <option value="Marketing">Marketing</option>
-                </select>
+                <?php if (count($topics) > 0): ?>
+                <?php foreach ($topics as $topic): ?>
+                <option value="<?= htmlspecialchars($topic) ?>"><?= htmlspecialchars($topic) ?></option>
+                <?php endforeach; ?>
+                <?php else: ?>
+                 <option disabled>No topics found</option>
+                <?php endif; ?>
+            </select>
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">Post Content</label>
