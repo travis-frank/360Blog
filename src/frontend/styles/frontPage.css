@@ -21,8 +21,6 @@ nav ul {
     padding: 0;
 }
 
-
-
 main {
     width: 80%;
     margin: auto;
@@ -42,7 +40,7 @@ main {
     width: 15rem;
     height: 15rem;
     border-radius: 8px;
-    background-color: #ddd;
+    background-color: #E8E8E8;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -57,7 +55,9 @@ main {
 .profile-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+}
+.profile-container .featured-info {
+    margin-left: 2rem;
 }
 
 .featured-info {
@@ -72,11 +72,49 @@ main {
 .popular .post-item {
     text-align: center;
     width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #E8E8E8;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.popular .post-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .popular .post-item img {
     width: 100%;
+    height: 200px;
+    object-fit: cover;
     border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.popular .post-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.popular .post-item p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.popular .post-item a {
+    text-decoration: none;
+    color: #800020;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.popular .post-item a:hover {
+    color: #333;
 }
 
 .categories ul {
