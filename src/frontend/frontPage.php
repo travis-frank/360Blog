@@ -51,74 +51,77 @@ session_start();
 
 
 <main>
+<?php
+include_once("php/DBConnect.php");
+
+// Fetch the 4 most recent posts
+$query = "SELECT * FROM posts WHERE is_deleted = 0 ORDER BY created_at DESC LIMIT 4";
+$result = $conn->query($query);
+
+$posts = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $posts[] = $row;
+    }
+}
+?>
+
+<!-- Featured Post -->
+<?php if (!empty($posts)): ?>
+    <?php $featured = $posts[0]; ?>
     <section class="featured">
-        <h2>Featured Post</h2>
+        <h2><strong>Featured Post</strong></h2>
         <div class="profile-container">
             <div class="profile-picture">
-                <img src="../../Images/profilePic.jpg" alt="Profile Picture">
+                <img src="data:image/jpeg;base64,<?= base64_encode($featured['banner_image']) ?>" alt="Banner Image">
             </div>
             <div class="featured-info">
-            <h3>Awesome Blog Post</h3>
-            <p>This is a short description of the featured post. Read more to explore...</p>
-            <a href="#">Read More</a>
+                <h3><?= htmlspecialchars($featured['title']) ?></h3>
+                <p><?= htmlspecialchars(substr($featured['content'], 0, 100)) ?>...</p>
+                <a href="blogPost.php?post_id=<?= htmlspecialchars($featured['post_id']) ?>">Read more</a>
+            </div>
         </div>
-        </div>
-       
     </section>
+<?php endif; ?>
 
+<!-- Popular Posts -->
+<?php if (count($posts) > 1): ?>
     <section class="popular">
-        <h2>Popular Posts</h2>
+        <h2><strong>Popular Posts</strong></h2>
         <div class="post-list">
-            <div class="post-item">
-                <div class="profile-picture">
-                    <img src="../../Images/sports.jpg" alt="Post 1">
+            <?php for ($i = 1; $i < count($posts); $i++): ?>
+                <div class="post-item">
+                    <div class="profile-picture">
+                        <img src="data:image/jpeg;base64,<?= base64_encode($posts[$i]['banner_image']) ?>" alt="Post <?= $i ?>">
+                    </div>
+                    <h3><?= htmlspecialchars($posts[$i]['title']) ?></h3>
+                    <p><?= htmlspecialchars(substr($posts[$i]['content'], 0, 100)) ?>...</p>
+                    <a href="blogPost.php?post_id=<?= htmlspecialchars($posts[$i]['post_id']) ?>">Read More</a>
                 </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat... 
-                   
-                   </p>
-               <a href="#">Read More</a>
-            </div>
-            <div class="post-item">
-                <div class="profile-picture">
-                    <img src="../../Images/music.webp" alt="Post 2">
-                </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat... 
-                   
-                   </p>
-               <a href="#">Read More</a>
-            </div>
-            <div class="post-item">
-                <div class="profile-picture">
-                    <img src="../../Images/manga.webp" alt="Post 3">
-                </div>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                     Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat... 
-                    
-                    </p>
-                <a href="#">Read More</a>
-            </div>
+            <?php endfor; ?>
         </div>
     </section>
+<?php endif; ?>
 
-    <section class="categories">
-        <h2>Categories</h2>
-        <ul>
-            <li><a href="#">Technology</a></li>
-            <li><a href="#">Lifestyle</a></li>
-            <li><a href="#">Travel</a></li>
-            <li><a href="#">Food</a></li>
-            <li><a href="#">Health</a></li>
-            <li><a href="#">Sports</a></li>
-            <li><a href="#">Music</a></li>
-            <li><a href="#">Film</a></li>
-            <li><a href='#'>Gaming</a></li>
-            <li><a href='#'>Fashion</a></li>
-            <li><a href='#'>Literature</a></li>
-            <li><a href='#'>Manga/Anime</a></li>
-        </ul>
-    </section>
+<!-- Categories (unchanged) -->
+<section class="categories">
+    <h2><strong>Categories</strong></h2>
+    <ul>
+        <li><a href="#">Technology</a></li>
+        <li><a href="#">Lifestyle</a></li>
+        <li><a href="#">Travel</a></li>
+        <li><a href="#">Food</a></li>
+        <li><a href="#">Health</a></li>
+        <li><a href="#">Sports</a></li>
+        <li><a href="#">Music</a></li>
+        <li><a href="#">Film</a></li>
+        <li><a href='#'>Gaming</a></li>
+        <li><a href='#'>Fashion</a></li>
+        <li><a href='#'>Literature</a></li>
+        <li><a href='#'>Manga/Anime</a></li>
+    </ul>
+</section>
+
 </main>
 
 
