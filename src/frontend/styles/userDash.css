@@ -60,7 +60,7 @@ input.form-control.search-bar {
 
 input.form-control:not(.search-bar):not(.profile_picture), #mb-2 {
     border-radius: 10px;
-    width: 45em; /* Changed from 500px to 700px */
+    width: 35em; /* Changed from 500px to 700px */
 }
 
 input.form-control #form-control-search-bar {
