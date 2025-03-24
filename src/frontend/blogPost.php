@@ -28,12 +28,27 @@ if (!$result) {
 }
 $post = $result->fetch_assoc();
 $stmt->close();
-$conn->close();
 
 if (!$post) {
     echo "<h2>Post not found.</h2>";
     exit();
 }
+
+// Fetch comments
+$comments_stmt = $conn->prepare("SELECT comments.content, comments.created_at, users.name AS author 
+                                 FROM comments 
+                                 JOIN users ON comments.user_id = users.user_id 
+                                 WHERE comments.post_id = ? AND comments.is_deleted = 0 
+                                 ORDER BY comments.created_at DESC");
+if (!$comments_stmt) {
+    die("Prepare failed: " . $conn->error);
+}
+$comments_stmt->bind_param("i", $post_id);
+$comments_stmt->execute();
+$comments_result = $comments_stmt->get_result();
+$comments = $comments_result->fetch_all(MYSQLI_ASSOC);
+$comments_stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -54,19 +69,29 @@ if (!$post) {
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="feed.php">Feed</a></li>
+                <li class="nav-item"><a class="nav-link" href="frontPage.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="userDash.php">Profile</a></li>
+                <li class="nav-item"><a class="nav-link" href="createPost.php">Create Post</a></li>
+                
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <li class="nav-item"><a class="nav-link" href="adminDash.html">Admin Dashboard</a></li>
+                <?php endif; ?>
+
+            <?php if (isset($_SESSION['user_id'])): ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="feed.php">Feed</a>
+                    <a class="nav-link fw-bold text-danger" href="php/logout.php">Logout</a>
                 </li>
+            <?php else: ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="frontPage.php">Home</a>
+                    <a class="nav-link fw-bold text-success" href="login.php">Login</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="userDash.php">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="createPost.php">Create Post</a>
-                </li>
+            <?php endif; ?>
+
             </ul>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <span class="navbar-text text-white me-3">Welcome, <?= htmlspecialchars($_SESSION['name']) ?></span>
+            <?php endif; ?>
             <form class="d-flex">
                 <input type="text" class="form-control search-bar" placeholder="Search...">
             </form>
@@ -94,49 +119,27 @@ if (!$post) {
     <div class="comment-container">
         <h3>Comments</h3>
         <div class="comment-section">
-            <form class="mb-4">
+            <form class="mb-4" method="post" action="php/comment.php">
                 <div class="mb-3">
-                    <textarea class="form-control" id="commentText" rows="3" placeholder="Your comment"></textarea>
+                    <textarea class="form-control" id="commentText" name="content" rows="3" placeholder="Your comment"></textarea>
                 </div>
+                <input type="hidden" name="post_id" value="<?php echo htmlspecialchars($post_id); ?>">
+                <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($_SESSION['user_id']); ?>">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             <div class="comments-list">
-                <div class="comment mb-3">
-                    <div class="d-flex">
-                        <strong class="me-2">John Doe</strong>
-                        <span class="text-muted">March 1, 2025</span>
+                <?php foreach ($comments as $comment): ?>
+                    <div class="comment mb-3">
+                        <div class="d-flex">
+                            <strong class="me-2"><?php echo htmlspecialchars($comment['author']); ?></strong>
+                            <span class="text-muted"><?php echo date("F j, Y", strtotime($comment['created_at'])); ?></span>
+                        </div>
+                        <p><?php echo nl2br(htmlspecialchars($comment['content'])); ?></p>
                     </div>
-                    <p>This is a sample comment. Great post!</p>
-                </div>
-                <div class="comment mb-3">
-                    <div class="d-flex">
-                        <strong class="me-2">Jane Smith</strong>
-                        <span class="text-muted">March 2, 2025</span>
-                    </div>
-                    <p>Very informative. Thanks for sharing!</p>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
-
-    <div class="related-articles mt-4">
-        <h3>Related Articles</h3>
-        <ul class="list-group">
-            <li class="list-group-item">
-                <a href="#">Article #1</a>
-            </li>
-            <li class="list-group-item">
-                <a href="#">Article #2</a>
-            </li>
-            <li class="list-group-item">
-                <a href="#">Article #3</a>
-            </li>
-            <li class="list-group-item">
-                <a href="#">Article #4</a>
-            </li>
-        </ul>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
