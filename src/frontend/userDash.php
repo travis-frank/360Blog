@@ -20,7 +20,7 @@
     $user = $result->fetch_assoc();
 
     // Fetch user blog posts
-    $postQuery = $conn->prepare("SELECT user_id, title, description FROM posts WHERE user_id = ?");
+    $postQuery = $conn->prepare("SELECT post_id, user_id, title, description, created_at FROM posts WHERE user_id = ?");
     $postQuery->bind_param("i", $user_id);
     $postQuery->execute();
     $posts = $postQuery->get_result();
@@ -119,65 +119,64 @@
             </div>
 
             <div class="row mt-4">
-                <div class="col-md-6">
-                    <h4>My Blogs:</h4>
-                    <div class="row">
+            <div class="col-md-6">
+            <h4>My Blogs:</h4>
+            <div class="row">
+                <?php if ($posts->num_rows > 0): ?>
+                    <?php while ($post = $posts->fetch_assoc()): ?>
                         <div class="col-md-6 mb-3">
                             <div class="blog-post">
                                 <img src="../../Images/pencil-square.svg" alt="Blog Post">
-                                <h5>BLOG POST TITLE</h5>
-                                <p>Short description of the blog post...</p>
-                                <a href="#">Read More</a>
+                                <h5><?= htmlspecialchars($post['title'] ?? 'Untitled') ?></h5>
+                                <p><?= htmlspecialchars($post['description'] ?? '') ?></p>
+                                <small class="text-muted">Posted on 
+                                <?= !empty($post['created_at']) ? date("F j, Y, g:i a", strtotime($post['created_at'])) : '<em>Unknown date</em>' ?>
+                                </small><br>
+                                <a href="blogPost.php?post_id=<?= (int)$post['post_id'] ?>" class="btn btn-primary mt-2">Read More</a>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="blog-post">
-                                <img src="../../Images/pencil-square.svg" alt="Blog Post">
-                                <h5>BLOG POST TITLE</h5>
-                                <p>Short description of the blog post...</p>
-                                <a href="#">Read More</a>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="blog-post">
-                                <img src="../../Images/pencil-square.svg" alt="Blog Post">
-                                <h5>BLOG POST TITLE</h5>
-                                <p>Short description of the blog post...</p>
-                                <a href="#">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p>No blog posts yet.</p>
+                <?php endif; ?>
+            </div>
+        </div>
 
-                <div class="col-md-6">
-                    <h4>My Likes:</h4>
-                    <div class="row">
+        <div class="col-md-6">
+            <h4>My Likes:</h4>
+            <div class="row">
+                <?php
+                $likeQuery = $conn->prepare("
+                    SELECT p.post_id, p.title, p.description, p.created_at
+                    FROM likes l
+                    JOIN posts p ON l.post_id = p.post_id
+                    WHERE l.user_id = ?
+                ");
+                $likeQuery->bind_param("i", $user_id);
+                $likeQuery->execute();
+                $likedPosts = $likeQuery->get_result();
+                ?>
+
+                <?php if ($likedPosts->num_rows > 0): ?>
+                    <?php while ($like = $likedPosts->fetch_assoc()): ?>
                         <div class="col-md-6 mb-3">
-                            <div class="liked-post">
-                                <img src="../../Images/heart.png" alt="Liked Post">
-                                <h5>BLOG POST TITLE</h5>
-                                <p>Short description of the blog post...</p>
-                                <a href="#">Read More</a>
+                            <div class="liked-post p-3 border rounded shadow-sm">
+                                <img src="../../Images/heart.png" alt="Liked Post" class="mb-2" style="width: 20px;">
+                                <h5><?= htmlspecialchars($like['title'] ?? 'Untitled') ?></h5>
+                                <p><?= htmlspecialchars($like['description'] ?? '') ?></p>
+                                <small class="text-muted">
+                                    Posted on <?= !empty($like['created_at']) ? date("F j, Y, g:i a", strtotime($like['created_at'])) : '<em>Unknown date</em>' ?>
+                                </small><br>
+                                <a href="blogPost.php?post_id=<?= isset($like['post_id']) ? (int)$like['post_id'] : 0; ?>" class="btn btn-primary mt-2">Read More</a>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="liked-post">
-                                <img src="../../Images/heart.png" alt="Liked Post">
-                                <h5>BLOG POST TITLE</h5>
-                                <p>Short description of the blog post...</p>
-                                <a href="#">Read More</a>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="liked-post">
-                                <img src="../../Images/heart.png" alt="Liked Post">
-                                <h5>BLOG POST TITLE</h5>
-                                <p>Short description of the blog post...</p>
-                                <a href="#">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p>You haven't liked any posts yet.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+
             </div>
         </div>
     </div>
