@@ -28,6 +28,17 @@ if (!$result) {
 }
 $post = $result->fetch_assoc();
 $stmt->close();
+
+$isLiked = false;
+if (isset($_SESSION['user_id'])) {
+    $likeCheck = $conn->prepare("SELECT 1 FROM likes WHERE user_id = ? AND post_id = ?");
+    $likeCheck->bind_param("ii", $_SESSION['user_id'], $post_id);
+    $likeCheck->execute();
+    $likeCheck->store_result();
+    $isLiked = $likeCheck->num_rows > 0;
+    $likeCheck->close();
+}
+
 $conn->close();
 
 if (!$post) {
@@ -58,13 +69,13 @@ if (!$post) {
                     <a class="nav-link" href="feed.php">Feed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="frontPage.html">Home</a>
+                    <a class="nav-link" href="frontPage.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="userDash.html">Profile</a>
+                    <a class="nav-link" href="userDash.php">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="createPost.html">Create Post</a>
+                    <a class="nav-link" href="createPost.php">Create Post</a>
                 </li>
             </ul>
             <form class="d-flex">
@@ -79,10 +90,16 @@ if (!$post) {
             By <strong><?php echo htmlspecialchars($post['author']); ?></strong>
             <img src="../../Images/person.svg" class="rounded-circle ms-2" alt="User Profile Picture" width="30" height="30">
             <button class="btn btn-sm btn-primary ms-2">Follow</button>
+
+            <form method="POST" action="php/handleLike.php" style="display:inline;">
+                <input type="hidden" name="post_id" value="<?= $post_id ?>">
+                <button type="submit" class="btn btn-sm <?= $isLiked ? 'btn-danger' : 'btn-outline-danger' ?> ms-2">
+                    ❤️ <?= $isLiked ? 'Unlike' : 'Like' ?>
+                </button>
+            </form>
         </p>
         <p class="blog-meta">Published on <strong><?php echo date("F j, Y", strtotime($post['created_at'])); ?></strong></p>
 
-        <!-- Display Image if Exists -->
         <?php if (!empty($post['banner_image'])): ?>
             <img src="data:image/jpeg;base64,<?php echo base64_encode($post['banner_image']); ?>" class="img-fluid my-4" alt="Blog Banner">
         <?php endif; ?>
