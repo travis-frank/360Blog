@@ -26,6 +26,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Query failed.");
     }
 
+    $stmt = $conn->prepare("SELECT user_id, name, email, password, role, is_active FROM users WHERE email = ? LIMIT 1");
+    if (!$stmt) {
+        error_log("Query preparation failed: " . $conn->error);
+        die("Query failed.");
+    } 
+    
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();

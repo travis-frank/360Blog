@@ -71,18 +71,18 @@ document.addEventListener('DOMContentLoaded', function() {
                   <td>${user.role}</td>
                   <td>${user.is_active == 1 ? 'Active' : 'Disabled'}</td>
                   <td>
-                    <button class="btn btn-sm btn-toggle-status" data-user-id="${user.user_id}">
+                    <button class="btn btn-sm btn-danger btn-toggle-status" data-user-id="${user.user_id}">
                       ${user.is_active == 1 ? 'Disable' : 'Enable'}
                     </button>
                   </td>
                   <td>
-                    <form action="../../src/backend/updateUserRole.php" method="post">
+                    <form action="../../src/backend/updateUserRole.php" method="post" class="update-role-form" data-user-id="${user.user_id}">
                       <input type="hidden" name="user_id" value="${user.user_id}" />
                       <select name="new_role">
                         <option value="user"  ${user.role.toLowerCase() === 'user'  ? 'selected' : ''}>User</option>
                         <option value="admin" ${user.role.toLowerCase() === 'admin' ? 'selected' : ''}>Admin</option>
                       </select>
-                      <button type="submit" class="btn btn-sm btn-secondary">Update Role</button>
+                      <button type="button" class="btn btn-sm btn-secondary update-role-btn">Update Role</button>
                     </form>
                   </td>
                 </tr>
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   <td>${new Date(post.created_at).toLocaleDateString()}</td>
                   <td>${post.is_deleted == 1 ? 'Deleted' : 'Active'}</td>
                   <td>
-                    <button class="btn btn-sm btn-delete-post" data-post-id="${post.post_id}">Delete</button>
+                    <button class="btn btn-sm btn-danger btn-delete-post" data-post-id="${post.post_id}">Delete</button>
                   </td>
                 </tr>
               `;
@@ -135,7 +135,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-delete-post').forEach(btn => {
               btn.addEventListener('click', () => {
                 const postId = btn.getAttribute('data-post-id');
-                deletePost(postId);
+                if (confirm(`Are you sure you want to delete the post: "${postTitle}"?`)) {
+                  deletePost(postId);
+                }
               });
             });
           })
@@ -182,7 +184,9 @@ document.addEventListener('DOMContentLoaded', function() {
           document.querySelectorAll('.btn-remove-topic').forEach(btn => {
             btn.addEventListener('click', function() {
               const topic = btn.getAttribute('data-topic');
-              removeTopic(topic);
+              if (confirm(`Are you sure you want to delete the topic: "${topic}"?`)) {
+                removeTopic(topic);
+              }
             });
           });
         })
@@ -244,5 +248,49 @@ document.addEventListener('DOMContentLoaded', function() {
           })
           .catch(error => console.error('Error adding topic:', error));
       });
+    }
+
+    // Handle role update
+    document.addEventListener('click', function (e) {
+      if (e.target.classList.contains('update-role-btn')) {
+        const form = e.target.closest('.update-role-form');
+        const userId = form.getAttribute('data-user-id');
+        const newRole = form.querySelector('select[name="new_role"]').value;
+  
+        fetch('../../src/backend/toggleUserStatus.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ user_id: userId, new_role: newRole }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert(`User role updated to: ${data.new_role}`);
+            } else {
+              alert(`Failed to update role: ${data.error}`);
+            }
+          })
+          .catch((error) => console.error('Error updating role:', error));
+      }
+    });
+
+    // Toggle user status
+    function toggleUserStatus(userId) {
+      console.log(`Toggling status for user ID: ${userId}`);
+      fetch('../../src/backend/toggleUserStatus.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ user_id: userId }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert(`User status updated successfully.`);
+            loadUsers(); // Reload the users list
+          } else {
+            alert(`Failed to update user status: ${data.error}`);
+          }
+        })
+        .catch(error => console.error('Error toggling user status:', error));
     }
   });
