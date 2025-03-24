@@ -58,7 +58,7 @@ if (!$post) {
                     <a class="nav-link" href="feed.php">Feed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="frontPage.html">Home</a>
+                    <a class="nav-link" href="frontPage.php">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="userDash.html">Profile</a>
