@@ -30,7 +30,7 @@ session_start();
                     <a class="nav-link" href="userDash.php">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="createPost.html">Create Post</a>
+                    <a class="nav-link" href="createPost.php">Create Post</a>
                 </li>
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                 <li class="nav-item"><a class="nav-link" href="adminDash.php">Admin Dashboard</a></li>
