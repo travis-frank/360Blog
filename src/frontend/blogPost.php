@@ -39,7 +39,6 @@ if (isset($_SESSION['user_id'])) {
     $likeCheck->close();
 }
 
-$conn->close();
 
 if (!$post) {
     echo "<h2>Post not found.</h2>";
