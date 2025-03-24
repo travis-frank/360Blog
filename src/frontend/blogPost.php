@@ -61,10 +61,10 @@ if (!$post) {
                     <a class="nav-link" href="frontPage.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="userDash.html">Profile</a>
+                    <a class="nav-link" href="userDash.php">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="createPost.html">Create Post</a>
+                    <a class="nav-link" href="createPost.php">Create Post</a>
                 </li>
             </ul>
             <form class="d-flex">

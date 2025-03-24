@@ -64,6 +64,17 @@ if ($result && $result->num_rows > 0) {
         $posts[] = $row;
     }
 }
+
+// Fetch all topics
+$topicQuery = "SELECT * FROM topics";
+$topicResult = $conn->query($topicQuery);
+
+$topics = [];
+if ($topicResult && $topicResult->num_rows > 0) {
+    while ($topicRow = $topicResult->fetch_assoc()) {
+        $topics[] = $topicRow;
+    }
+}
 ?>
 
 <!-- Featured Post -->
@@ -105,22 +116,25 @@ if ($result && $result->num_rows > 0) {
 
 <!-- Categories (unchanged) -->
 <section class="categories">
-    <h2><strong>Categories</strong></h2>
+    <h2>Categories</h2>
     <ul>
-        <li><a href="#">Technology</a></li>
-        <li><a href="#">Lifestyle</a></li>
-        <li><a href="#">Travel</a></li>
-        <li><a href="#">Food</a></li>
-        <li><a href="#">Health</a></li>
-        <li><a href="#">Sports</a></li>
-        <li><a href="#">Music</a></li>
-        <li><a href="#">Film</a></li>
-        <li><a href='#'>Gaming</a></li>
-        <li><a href='#'>Fashion</a></li>
-        <li><a href='#'>Literature</a></li>
-        <li><a href='#'>Manga/Anime</a></li>
+        <?php
+        $topicQuery = "SELECT DISTINCT topic FROM topics";
+        $topicResult = $conn->query($topicQuery);
+        if ($topicResult && $topicResult->num_rows > 0):
+            while ($row = $topicResult->fetch_assoc()):
+                $topic = htmlspecialchars($row['topic']);
+        ?>
+                <li><a href="#"><?= $topic ?></a></li>
+        <?php
+            endwhile;
+        else:
+        ?>
+            <li>No categories found.</li>
+        <?php endif; ?>
     </ul>
 </section>
+
 
 </main>
 
