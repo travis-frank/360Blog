@@ -44,13 +44,11 @@ session_start();
         </div>
     </nav>
 
-
 <main>
 <?php
 include_once("php/DBConnect.php");
 
-// Fetch the 4 most recent posts
-$query = "SELECT * FROM posts WHERE is_deleted = 0 ORDER BY created_at DESC LIMIT 4";
+$query = "SELECT p.*, u.name FROM posts p JOIN users u ON p.user_id = u.user_id WHERE p.is_deleted = 0 ORDER BY p.created_at DESC LIMIT 4";
 $result = $conn->query($query);
 
 $posts = [];
@@ -60,7 +58,6 @@ if ($result && $result->num_rows > 0) {
     }
 }
 
-// Fetch all topics
 $topicQuery = "SELECT * FROM topics";
 $topicResult = $conn->query($topicQuery);
 
@@ -84,6 +81,7 @@ if ($topicResult && $topicResult->num_rows > 0) {
             <div class="featured-info">
                 <h3><?= htmlspecialchars($featured['title']) ?></h3>
                 <p><?= htmlspecialchars(substr($featured['content'], 0, 100)) ?>...</p>
+                <p class="text-muted">Posted on <?= date('F j, Y', strtotime($featured['created_at'])) ?> by <?= htmlspecialchars($featured['name']) ?></p>
                 <a href="blogPost.php?post_id=<?= htmlspecialchars($featured['post_id']) ?>">Read more</a>
             </div>
         </div>
@@ -102,6 +100,7 @@ if ($topicResult && $topicResult->num_rows > 0) {
                     </div>
                     <h3><?= htmlspecialchars($posts[$i]['title']) ?></h3>
                     <p><?= htmlspecialchars(substr($posts[$i]['content'], 0, 100)) ?>...</p>
+                    <p class="text-muted">Posted on <?= date('F j, Y', strtotime($posts[$i]['created_at'])) ?> by <?= htmlspecialchars($posts[$i]['name']) ?></p>
                     <a href="blogPost.php?post_id=<?= htmlspecialchars($posts[$i]['post_id']) ?>">Read More</a>
                 </div>
             <?php endfor; ?>
