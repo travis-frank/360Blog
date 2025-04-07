@@ -2,8 +2,29 @@
 include('php/DBConnect.php');
 session_start(); 
 
-$sql = "SELECT post_id, title, content, created_at, user_id FROM posts ORDER BY created_at DESC";
-$result = $conn->query($sql);
+// Check if the user is logged in
+$filter = isset($_GET['topic']) ? $_GET['topic'] : null;
+
+// Fetch posts based on the selected topic
+if ($filter) {
+    $stmt = $conn->prepare("
+        SELECT post_id, title, content, created_at, user_id 
+        FROM posts 
+        WHERE category = ? AND is_deleted = 0
+        ORDER BY created_at DESC
+    ");
+
+    if (!$stmt) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    $stmt->bind_param("s", $filter);
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    $sql = "SELECT post_id, title, content, created_at, user_id FROM posts WHERE is_deleted = 0 ORDER BY created_at DESC";
+    $result = $conn->query($sql);
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,6 +39,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="styles/nav.css">
 </head>
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <img src="../../Images/logo.png" alt="Logo" class="navbar-brand">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -55,15 +77,41 @@ $result = $conn->query($sql);
     </nav>
 
     <main>
+        <!-- Filter Dropdown -->
+        <div class="d-flex justify-content-end mb-3">
+            <form method="GET" class="d-flex align-items-center">
+                <select name="topic" id="topic" onchange="this.form.submit()" class="form-select w-auto">
+                    <option value="">All</option>
+                    <?php
+                    $topicQuery = "SELECT DISTINCT topic FROM topics";
+                    $topicResult = $conn->query($topicQuery);
+                    while ($row = $topicResult->fetch_assoc()):
+                        $t = htmlspecialchars($row['topic']);
+                        $selected = ($t === $filter) ? 'selected' : '';
+                    ?>
+                        <option value="<?= $t ?>" <?= $selected ?>><?= $t ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </form>
+        </div>
+
+        <!-- Post List -->
         <div class="post-list">
+        <?php if ($result && $result->num_rows > 0): ?>
             <?php while ($post = $result->fetch_assoc()): ?>
                 <div class="post-item">
-                    <h2><?php echo htmlspecialchars($post['title']); ?></h2>
-                    <p><?php echo nl2br(htmlspecialchars(substr($post['content'], 0, 150))) . '...'; ?></p>
-                    <a href="blogPost.php?post_id=<?php echo $post['post_id']; ?>">Read more</a>
+                    <h2><?= htmlspecialchars($post['title']) ?></h2>
+                    <p><?= nl2br(htmlspecialchars(substr($post['content'], 0, 150))) ?>...</p>
+                    <a href="blogPost.php?post_id=<?= $post['post_id'] ?>">Read more</a>
                 </div>
             <?php endwhile; ?>
-        </div>
+        <?php else: ?>
+            <div class="alert alert-info bg-white text-center w-100 mt-5 p-4 rounded border border-dark shadow-sm" role="alert">
+                <h4 class="mb-2">No posts yet in this category</h4>
+                <p>Be the first to <a href="createPost.php" class="alert-link">create a post</a> in this topic!</p>
+            </div>
+        <?php endif; ?>
+    </div>
     </main>
 
     <script src="js/feed.js"></script>
