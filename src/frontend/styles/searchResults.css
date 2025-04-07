@@ -1,0 +1,75 @@
+.search-results-container {
+    margin-top: 40px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px; /* Add padding for spacing */
+    background-color: rgba(255, 255, 255, 0.9); /* Subtle background for readability */
+    border-radius: 10px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+}
+
+.search-header {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.result-section {
+    margin-bottom: 2rem;
+}
+
+.result-section h4 {
+    font-size: 1.25rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.result-card {
+    background-color: #f9f9f9;
+    border-left: 4px solid #0d6efd;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+}
+
+.result-card:hover {
+    background-color: #f0f8ff;
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transform: scale(1.02); /* Slightly enlarge the card */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Add a more pronounced shadow */
+}
+
+.result-card h5 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.result-card p {
+    margin-bottom: 0.25rem;
+    color: #555;
+}
+
+.result-author {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.no-results {
+    font-style: italic;
+    color: #777;
+}
+
+.search-results-page {
+    background-image: url("../../Images/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh; /* Ensure full-page height */
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
