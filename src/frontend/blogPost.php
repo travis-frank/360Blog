@@ -13,7 +13,8 @@ if (!$post_id) {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT posts.title, posts.content, posts.created_at, users.name AS author, posts.banner_image 
+// Get the post and author info
+$stmt = $conn->prepare("SELECT posts.title, posts.content, posts.created_at, users.user_id AS author_id, users.name AS author, posts.banner_image 
                         FROM posts 
                         JOIN users ON posts.user_id = users.user_id 
                         WHERE posts.post_id = ?");
@@ -39,14 +40,13 @@ if (isset($_SESSION['user_id'])) {
     $likeCheck->close();
 }
 
-
 if (!$post) {
     echo "<h2>Post not found.</h2>";
     exit();
 }
 
-// Fetch comments
-$comments_stmt = $conn->prepare("SELECT comments.content, comments.created_at, users.name AS author 
+// Fetch comments with author ID
+$comments_stmt = $conn->prepare("SELECT comments.content, comments.created_at, users.user_id AS author_id, users.name AS author 
                                  FROM comments 
                                  JOIN users ON comments.user_id = users.user_id 
                                  WHERE comments.post_id = ? AND comments.is_deleted = 0 
@@ -67,7 +67,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($post['title']); ?></title>
+    <title><?= htmlspecialchars($post['title']); ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles/blogPost.css">
     <link rel="stylesheet" href="styles/nav.css">
@@ -75,7 +75,7 @@ $conn->close();
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <img src="../../Images/logo.png" alt="Logo" class="navbar-brand">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -84,21 +84,14 @@ $conn->close();
                 <li class="nav-item"><a class="nav-link" href="frontPage.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="userDash.php">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="createPost.php">Create Post</a></li>
-                
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                 <li class="nav-item"><a class="nav-link" href="adminDash.php">Admin Dashboard</a></li>
                 <?php endif; ?>
-
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <li class="nav-item">
-                    <a class="nav-link fw-bold text-danger" href="php/logout.php">Logout</a>
-                </li>
-            <?php else: ?>
-                <li class="nav-item">
-                    <a class="nav-link fw-bold text-success" href="login.php">Login</a>
-                </li>
-            <?php endif; ?>
-
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <li class="nav-item"><a class="nav-link fw-bold text-danger" href="php/logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li class="nav-item"><a class="nav-link fw-bold text-success" href="login.php">Login</a></li>
+                <?php endif; ?>
             </ul>
             <?php if (isset($_SESSION['user_id'])): ?>
                 <span class="navbar-text text-white me-3">Welcome, <?= htmlspecialchars($_SESSION['name']) ?></span>
@@ -110,9 +103,9 @@ $conn->close();
     </nav>
 
     <div class="blog-container">
-        <h1 class="blog-title"><?php echo htmlspecialchars($post['title']); ?></h1>
+        <h1 class="blog-title"><?= htmlspecialchars($post['title']); ?></h1>
         <p class="blog-meta">
-            By <strong><?php echo htmlspecialchars($post['author']); ?></strong>
+            By <a href="userProfile.php?user_id=<?= $post['author_id'] ?>"><strong><?= htmlspecialchars($post['author']) ?></strong></a>
             <img src="../../Images/person.svg" class="rounded-circle ms-2" alt="User Profile Picture" width="30" height="30">
             <button class="btn btn-sm btn-primary ms-2">Follow</button>
 
@@ -123,14 +116,14 @@ $conn->close();
                 </button>
             </form>
         </p>
-        <p class="blog-meta">Published on <strong><?php echo date("F j, Y", strtotime($post['created_at'])); ?></strong></p>
+        <p class="blog-meta">Published on <strong><?= date("F j, Y", strtotime($post['created_at'])); ?></strong></p>
 
         <?php if (!empty($post['banner_image'])): ?>
-            <img src="data:image/jpeg;base64,<?php echo base64_encode($post['banner_image']); ?>" class="img-fluid my-4" alt="Blog Banner">
+            <img src="data:image/jpeg;base64,<?= base64_encode($post['banner_image']); ?>" class="img-fluid my-4" alt="Blog Banner">
         <?php endif; ?>
 
         <hr>
-        <p><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
+        <p><?= nl2br(htmlspecialchars($post['content'])); ?></p>
     </div>
 
     <div class="comment-container">
@@ -140,18 +133,18 @@ $conn->close();
                 <div class="mb-3">
                     <textarea class="form-control" id="commentText" name="content" rows="3" placeholder="Your comment"></textarea>
                 </div>
-                <input type="hidden" name="post_id" value="<?php echo htmlspecialchars($post_id); ?>">
-                <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($_SESSION['user_id']); ?>">
+                <input type="hidden" name="post_id" value="<?= htmlspecialchars($post_id); ?>">
+                <input type="hidden" name="user_id" value="<?= htmlspecialchars($_SESSION['user_id']); ?>">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
             <div class="comments-list">
                 <?php foreach ($comments as $comment): ?>
                     <div class="comment mb-3">
                         <div class="d-flex">
-                            <strong class="me-2"><?php echo htmlspecialchars($comment['author']); ?></strong>
-                            <span class="text-muted"><?php echo date("F j, Y", strtotime($comment['created_at'])); ?></span>
+                            <a href="userProfile.php?user_id=<?= $comment['author_id'] ?>"><strong class="me-2"><?= htmlspecialchars($comment['author']); ?></strong></a>
+                            <span class="text-muted"><?= date("F j, Y", strtotime($comment['created_at'])); ?></span>
                         </div>
-                        <p><?php echo nl2br(htmlspecialchars($comment['content'])); ?></p>
+                        <p><?= nl2br(htmlspecialchars($comment['content'])); ?></p>
                     </div>
                 <?php endforeach; ?>
             </div>

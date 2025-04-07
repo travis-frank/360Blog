@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
-$username = "dsokic";
-$password = "dsokic";
-$database = "dsokic";
+$username = "root";
+$password = "";
+$database = "360BlogDB";
 
 // Enable error reporting for debugging
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
