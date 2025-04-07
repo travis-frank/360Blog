@@ -125,7 +125,7 @@ if ($topicResult && $topicResult->num_rows > 0) {
             while ($row = $topicResult->fetch_assoc()):
                 $topic = htmlspecialchars($row['topic']);
         ?>
-                <li><a href="#"><?= $topic ?></a></li>
+                <li><a href="feed.php?topic=<?= urlencode($topic) ?>"><?= $topic ?></a></li>
         <?php
             endwhile;
         else:
@@ -134,16 +134,6 @@ if ($topicResult && $topicResult->num_rows > 0) {
         <?php endif; ?>
     </ul>
 </section>
-
-
 </main>
-
-
-
-
-
 </body>
-
-
-
 </html>
