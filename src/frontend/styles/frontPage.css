@@ -33,7 +33,18 @@ main {
     margin: 20px 0;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border: 4px solid #800020;
+    border: 4px solid #0b0b0b;
+}
+
+.featured a {
+    color: #800020;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.featured a:hover {
+    color: #333;
 }
 
 .profile-picture {
@@ -123,16 +134,31 @@ main {
 }
 
 .categories ul li {
-    background: #EE4B2B;
+    background: hsl(0, 0%, 12%);
+    color: #ffffff;
     margin: 5px 0;
     padding: 10px;
     border-radius: 5px;
+    transition: background-color 0.3s ease; 
+
+}
+
+.categories ul li:hover {
+    background: #464646; 
+    cursor: pointer; 
 }
 
 .categories ul li a {
     text-decoration: none;
-    color: #333;
+    color: #ffffff;
     font-weight: bold;
+    display: block; 
+    width: 100%; 
+    height: 100%; 
+}
+
+.categories ul li a:hover {
+    color: #ffffff;
 }
 
 footer {
