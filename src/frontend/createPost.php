@@ -1,9 +1,9 @@
 <?php
-    session_start();
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: login.php"); // Redirect if not logged in
-        exit();
-    }
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
 include 'php/DBConnect.php';
 $topics = [];
@@ -28,7 +28,6 @@ if ($result && $result->num_rows > 0) {
     <link rel="stylesheet" href="styles/nav.css">
 </head>
 <body>
-  
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <img src="../../Images/logo.png" alt="Logo" class="navbar-brand">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -55,12 +54,19 @@ if ($result && $result->num_rows > 0) {
             <form class="d-flex" action="searchResults.php" method="GET">
                 <input type="text" class="form-control search-bar" name="query" placeholder="Search..." required>
             </form>
-
         </div>
     </nav>
 
     <div class="page-container">
         <h2>Create a New Blog Post</h2>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= htmlspecialchars($_SESSION['error']) ?>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
         <form action="./php/createPost.php" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">Post Title</label>
@@ -69,14 +75,14 @@ if ($result && $result->num_rows > 0) {
             <div class="mb-3">
                 <label for="category" class="form-label">Category</label>
                 <select class="form-control" id="category" name="category" required>
-                <?php if (count($topics) > 0): ?>
-                <?php foreach ($topics as $topic): ?>
-                <option value="<?= htmlspecialchars($topic) ?>"><?= htmlspecialchars($topic) ?></option>
-                <?php endforeach; ?>
-                <?php else: ?>
-                 <option disabled>No topics found</option>
-                <?php endif; ?>
-            </select>
+                    <?php if (count($topics) > 0): ?>
+                        <?php foreach ($topics as $topic): ?>
+                            <option value="<?= htmlspecialchars($topic) ?>"><?= htmlspecialchars($topic) ?></option>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <option disabled>No topics found</option>
+                    <?php endif; ?>
+                </select>
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">Post Content</label>
@@ -84,7 +90,7 @@ if ($result && $result->num_rows > 0) {
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Upload Image</label>
-                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
             </div>
             <button type="submit" class="btn btn-primary">Publish Post</button>
         </form>
