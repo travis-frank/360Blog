@@ -29,6 +29,35 @@ $post_stmt->execute();
 $post_result = $post_stmt->get_result();
 $posts = $post_result->fetch_all(MYSQLI_ASSOC);
 $post_stmt->close();
+
+// Get followers count
+$followersCount = 0;
+$stmt = $conn->prepare("SELECT COUNT(*) FROM follows WHERE followed_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($followersCount);
+$stmt->fetch();
+$stmt->close();
+
+// Get following count
+$followingCount = 0;
+$stmt = $conn->prepare("SELECT COUNT(*) FROM follows WHERE follower_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($followingCount);
+$stmt->fetch();
+$stmt->close();
+
+// Check if viewer is following this user
+$isFollowing = false;
+if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $user_id) {
+    $follow_stmt = $conn->prepare("SELECT 1 FROM follows WHERE follower_id = ? AND followed_id = ?");
+    $follow_stmt->bind_param("ii", $_SESSION['user_id'], $user_id);
+    $follow_stmt->execute();
+    $follow_stmt->store_result();
+    $isFollowing = $follow_stmt->num_rows > 0;
+    $follow_stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,7 +72,7 @@ $post_stmt->close();
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <img src="../../Images/logo.png" alt="Logo" class="navbar-brand">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -55,17 +84,11 @@ $post_stmt->close();
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                 <li class="nav-item"><a class="nav-link" href="adminDash.php">Admin Dashboard</a></li>
                 <?php endif; ?>
-
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <li class="nav-item">
-                    <a class="nav-link fw-bold text-danger" href="php/logout.php">Logout</a>
-                </li>
-            <?php else: ?>
-                <li class="nav-item">
-                    <a class="nav-link fw-bold text-success" href="login.php">Login</a>
-                </li>
-            <?php endif; ?>
-
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <li class="nav-item"><a class="nav-link fw-bold text-danger" href="php/logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li class="nav-item"><a class="nav-link fw-bold text-success" href="login.php">Login</a></li>
+                <?php endif; ?>
             </ul>
             <?php if (isset($_SESSION['user_id'])): ?>
                 <span class="navbar-text text-white me-3">Welcome, <?= htmlspecialchars($_SESSION['name']) ?></span>
@@ -78,7 +101,7 @@ $post_stmt->close();
 
     <div class="profile-container text-center">
         <div class="profile-picture">
-        <img src="data:image/jpeg;base64,<?php echo base64_encode($user['profile_image']); ?>" alt="Profile Picture">
+            <img src="data:image/jpeg;base64,<?= base64_encode($user['profile_image']) ?>" alt="Profile Picture">
         </div>
         <h2><?= htmlspecialchars($user['name']) ?></h2>
         <?php if (!empty($user['bio'])): ?>
@@ -90,15 +113,23 @@ $post_stmt->close();
                 Posts
             </div>
             <div class="profile-stats">
-                <span>200</span>
+                <span><?= $followersCount ?></span>
                 Followers
             </div>
             <div class="profile-stats">
-                <span>180</span>
+                <span><?= $followingCount ?></span>
                 Following
             </div>
         </div>
-        <button class="btn btn-primary follow-btn mt-3">Follow</button>
+
+        <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] != $user_id): ?>
+            <form method="POST" action="php/followHandler.php" id="followForm" class="mt-3">
+                <input type="hidden" name="followed_id" value="<?= $user_id ?>">
+                <button type="submit" class="btn btn-<?= $isFollowing ? 'secondary' : 'primary' ?> follow-btn">
+                    <?= $isFollowing ? 'Unfollow' : 'Follow' ?>
+                </button>
+            </form>
+        <?php endif; ?>
     </div>
 
     <div class="container mt-5">
@@ -123,5 +154,30 @@ $post_stmt->close();
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.getElementById('followForm')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const res = await fetch(form.action, {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await res.text();
+        const btn = form.querySelector('button');
+
+        if (result === "followed") {
+            btn.classList.remove("btn-primary");
+            btn.classList.add("btn-secondary");
+            btn.innerText = "Unfollow";
+        } else if (result === "unfollowed") {
+            btn.classList.remove("btn-secondary");
+            btn.classList.add("btn-primary");
+            btn.innerText = "Follow";
+        }
+    });
+    </script>
 </body>
 </html>
