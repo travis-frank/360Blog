@@ -42,7 +42,7 @@ if ($filter) {
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
         <img src="../../Images/logo.png" alt="Logo" class="navbar-brand">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -51,28 +51,22 @@ if ($filter) {
                 <li class="nav-item"><a class="nav-link" href="frontPage.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="userDash.php">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="createPost.php">Create Post</a></li>
-                
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
                 <li class="nav-item"><a class="nav-link" href="adminDash.php">Admin Dashboard</a></li>
                 <?php endif; ?>
-
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <li class="nav-item">
-                    <a class="nav-link fw-bold text-danger" href="php/logout.php">Logout</a>
-                </li>
-            <?php else: ?>
-                <li class="nav-item">
-                    <a class="nav-link fw-bold text-success" href="login.php">Login</a>
-                </li>
-            <?php endif; ?>
-
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <li class="nav-item"><a class="nav-link fw-bold text-danger" href="php/logout.php">Logout</a></li>
+                <?php else: ?>
+                    <li class="nav-item"><a class="nav-link fw-bold text-success" href="login.php">Login</a></li>
+                <?php endif; ?>
             </ul>
             <?php if (isset($_SESSION['user_id'])): ?>
                 <span class="navbar-text text-white me-3">Welcome, <?= htmlspecialchars($_SESSION['name']) ?></span>
             <?php endif; ?>
-            <form class="d-flex">
-                <input type="text" class="form-control search-bar" placeholder="Search...">
+            <form class="d-flex" action="searchResults.php" method="GET">
+                <input type="text" class="form-control search-bar" name="query" placeholder="Search..." required>
             </form>
+
         </div>
     </nav>
 

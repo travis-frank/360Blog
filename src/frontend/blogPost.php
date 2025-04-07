@@ -102,9 +102,10 @@ $conn->close();
             <?php if (isset($_SESSION['user_id'])): ?>
                 <span class="navbar-text text-white me-3">Welcome, <?= htmlspecialchars($_SESSION['name']) ?></span>
             <?php endif; ?>
-            <form class="d-flex">
-                <input type="text" class="form-control search-bar" placeholder="Search...">
+            <form class="d-flex" action="searchResults.php" method="GET">
+                <input type="text" class="form-control search-bar" name="query" placeholder="Search..." required>
             </form>
+
         </div>
     </nav>
 
