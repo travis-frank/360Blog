@@ -312,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => { 
           renderPostsTrendChart(data.postDates);
           renderCategoryPieChart(data.categories);
+          renderSiteUsageChart(data.siteUsage);
         }, 100);
       })
       .catch(err => console.error('Error loading analytics:', err));
@@ -381,4 +382,94 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+  function renderSiteUsageChart(siteUsage) {
+    const canvas = document.getElementById('siteUsageChart');
+    if (!canvas) return;
+  
+    const ctx = canvas.getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: siteUsage.labels,
+        datasets: [
+          {
+            label: 'New Users',
+            data: siteUsage.users,
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0,123,255,0.1)',
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: 'Posts',
+            data: siteUsage.posts,
+            borderColor: '#28a745',
+            backgroundColor: 'rgba(40,167,69,0.1)',
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: 'Topics',
+            data: siteUsage.topics,
+            borderColor: '#ffc107',
+            backgroundColor: 'rgba(255,193,7,0.1)',
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: 'Comments',
+            data: siteUsage.comments,
+            borderColor: '#dc3545',
+            backgroundColor: 'rgba(220,53,69,0.1)',
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: 'Likes',
+            data: siteUsage.likes,
+            borderColor: '#6f42c1',
+            backgroundColor: 'rgba(111,66,193,0.1)',
+            fill: true,
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Weekly Site Activity'
+          },
+          legend: {
+            position: 'top'
+          },
+          tooltip: {
+            mode: 'index',
+            intersect: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Count'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Week'
+            }
+          }
+        },
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
+        }
+      }
+    });
+  }  
 });
