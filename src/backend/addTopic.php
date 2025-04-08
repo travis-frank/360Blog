@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $topicName = $_POST['topic_name'] ?? '';
 
     if ($topicName) {
-        $stmt = $conn->prepare("INSERT INTO topics (topic) VALUES (?)");
+        $stmt = $conn->prepare("INSERT INTO topics (topic, created_at) VALUES (?, 0)");
         $stmt->bind_param("s", $topicName);
         $stmt->execute();
 
