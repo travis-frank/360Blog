@@ -1,6 +1,7 @@
 # JTD Blog
 
 https://cosc360.ok.ubc.ca/dsokic
+
 [Video Demo](https://youtu.be/zukgOLixz3M)
 
 # Overview
