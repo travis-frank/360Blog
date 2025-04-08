@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     form.addEventListener('submit', function(event) {
-        event.preventDefault();
         let isValid = true;
         let errorMessage = '';
 
@@ -29,11 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
             isValid = false;
         }
 
-        if (isValid) {
-            const isAdmin = email.value.toLowerCase().includes('admin');
-            localStorage.setItem('userRole', isAdmin ? 'admin' : 'author');
-            window.location.href = isAdmin ? 'adminDash.html' : 'userDash.html';
-        } else {
+        if (!isValid) {
+            event.preventDefault();
             alert(errorMessage);
         }
     });

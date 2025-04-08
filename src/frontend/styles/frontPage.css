@@ -1,5 +1,11 @@
-body{
+body {
     background-image: url("../../../Images/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
 }
 
 body {
@@ -21,8 +27,6 @@ nav ul {
     padding: 0;
 }
 
-
-
 main {
     width: 80%;
     margin: auto;
@@ -35,14 +39,25 @@ main {
     margin: 20px 0;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border: 4px solid #800020;
+    border: 4px solid #0b0b0b;
+}
+
+.featured a {
+    color: #800020;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.featured a:hover {
+    color: #333;
 }
 
 .profile-picture {
     width: 15rem;
     height: 15rem;
     border-radius: 8px;
-    background-color: #ddd;
+    background-color: #E8E8E8;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -57,7 +72,9 @@ main {
 .profile-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+}
+.profile-container .featured-info {
+    margin-left: 2rem;
 }
 
 .featured-info {
@@ -72,11 +89,49 @@ main {
 .popular .post-item {
     text-align: center;
     width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #E8E8E8;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.popular .post-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .popular .post-item img {
     width: 100%;
+    height: 200px;
+    object-fit: cover;
     border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.popular .post-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.popular .post-item p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.popular .post-item a {
+    text-decoration: none;
+    color: #800020;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.popular .post-item a:hover {
+    color: #333;
 }
 
 .categories ul {
@@ -85,16 +140,31 @@ main {
 }
 
 .categories ul li {
-    background: #EE4B2B;
+    background: hsl(0, 0%, 12%);
+    color: #ffffff;
     margin: 5px 0;
     padding: 10px;
     border-radius: 5px;
+    transition: background-color 0.3s ease; 
+
+}
+
+.categories ul li:hover {
+    background: #464646; 
+    cursor: pointer; 
 }
 
 .categories ul li a {
     text-decoration: none;
-    color: #333;
+    color: #ffffff;
     font-weight: bold;
+    display: block; 
+    width: 100%; 
+    height: 100%; 
+}
+
+.categories ul li a:hover {
+    color: #ffffff;
 }
 
 footer {

@@ -21,6 +21,14 @@ body {
     font-size: 1rem;
     color: #000000;
 }
+.blog-meta img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 10px;
+    vertical-align: middle;
+}
 .blog-content {
     margin-top: 20px;
     line-height: 1.8;
@@ -60,4 +68,5 @@ body {
     padding: 20px;
     border-radius: 8px;
     margin-top: 20px;
+    margin-bottom: 100px;
 }

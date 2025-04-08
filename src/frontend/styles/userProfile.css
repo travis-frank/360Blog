@@ -14,11 +14,11 @@
      
 }
 .profile-picture img {
-    width: 50%;
-    height: 50%;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
-    margin-top: 25%;
+    margin-bottom: 20px;
 }
 .profile-info {
     display: flex;

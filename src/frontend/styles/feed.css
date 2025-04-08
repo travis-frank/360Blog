@@ -1,109 +1,130 @@
+/* General Body Styling */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f8f9fa; /* Bootstrap's light gray */
 }
 
-main {
-    width: 80%;
-    margin: auto;
-    padding: 20px;
+/* Main Content Layout */
+main, .container {
+    padding: 2rem 1rem;
 }
 
-.filter-container {
-    margin-bottom: 20px;
-}
-
-.filter-container label {
-    color: white;
-}
-.post-list {
+/* Post Card Styling */
+.card {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 1rem;
+    border: 1px solid #dee2e6;
+    border-left: 5px solid #800020; /* Burgundy accent */
+    border-radius: 0.75rem;
+  background: #E8E8E8;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
-.post-item {
-    background: #E8E8E8;
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border: 4px solid #800020;
+.card-body {
+    flex: 1;
 }
 
-.post-item h2 {
-    margin-top: 0;
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
-
-.Profile{
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    position: relative;
-    left: -80px;
-    margin-top: 100px;
-
-}
-.post-item p {
-    margin-bottom: 1px; /* Reduce bottom margin */
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 600;
 }
 
-.post-item a {
-    display: inline-block;
-    margin-top: 1px; /* Adjust as needed */
+.card-subtitle {
+    font-size: 0.9rem;
 }
 
-/* Style the filter container */
+.card-text {
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Post Card Image Styling */
+.card img {
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.post-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-right: 1rem;
+}
+
+/* "Read More" Button */
+.card .btn-outline-primary {
+    border-color: #800020;
+    color: #800020;
+}
+
+.card .btn-outline-primary:hover {
+    background-color: #800020;
+    color: #fff;
+}
+
+/* Filter Dropdown Container */
 .filter-container {
     display: flex;
+    justify-content: flex-end;
     align-items: center;
-    gap: 10px;
-    background: #800020; /* Dark red background */
-    padding: 10px 15px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    padding: 1rem;
+    background: #800020;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Label styling */
-.filter-container label {
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-}
-
-/* Dropdown styling */
-#category-filter {
-    padding: 8px 12px;
-    font-size: 16px;
-    border: none;
+/* Filter Dropdown */
+.filter-container select {
+    padding: 0.5rem 1.25rem 0.5rem 0.75rem;
+    font-size: 1rem;
     border-radius: 5px;
+    border: none;
     outline: none;
-    background: white;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
-
-/* Add hover effect */
-#category-filter:hover {
-    background: #f0f0f0;
-}
-
-/* Add focus effect */
-#category-filter:focus {
-    box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.8);
-}
-
-/* Add a downward arrow icon */
-#category-filter {
-    appearance: none; /* Removes default dropdown styling */
-    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="black"%3E%3Cpath fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /%3E%3C/svg%3E');
+    background-color: #fff;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='70,100 40,60 100,60' fill='black'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 12px;
-    padding-right: 30px;
+    background-position: right 12px center;
+    background-size: 10px;
+    cursor: pointer;
 }
 
+.filter-container select:hover {
+    background-color: #f8f9fa;
+}
 
+/* Alert Styling for Empty Feed */
+.alert-info {
+    background-color: #fff;
+    border-left: 6px solid #800020;
+    font-size: 1rem;
+}
+
+/* Responsive Post Layout */
+.row-cols-1 > .col {
+    display: flex;
+}
+.card {
+    flex-grow: 1;
+}
+
+/* Welcome Message in Navbar */
+.navbar-text {
+    font-weight: 500;
+}
+
+/* Search bar spacing */
+.search-bar {
+    margin-left: 1rem;
+}

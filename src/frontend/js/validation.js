@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Form submission
     form.addEventListener('submit', function(event) {
-        event.preventDefault();
         let isValid = true;
         let errorMessage = '';
 
@@ -47,10 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        if (isValid) {
-            // If valid, redirect to dashboard
-            window.location.href = 'userDash.html';
-        } else {
+        if (!isValid) {
+            event.preventDefault();
             alert(errorMessage);
         }
     });
