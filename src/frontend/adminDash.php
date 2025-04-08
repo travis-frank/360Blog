@@ -133,16 +133,16 @@ session_start();
           <h2>Analytics Dashboard</h2>
         </div>
         <div class="row">
-          <div class="col-md-6 mb-4">
-            <canvas id="postsTrendChart"></canvas>
-          </div>
-          <div class="col-md-6 mb-4">
-            <canvas id="categoryPieChart"></canvas>
-          </div>
-          <div class="col-md-12 mb-4">
-            <canvas id="siteUsageChart"></canvas>
-          </div>
+        <div class="col-md-12 mb-4">
+          <canvas id="siteUsageChart"></canvas>
         </div>
+        <div class="col-md-6 mb-4">
+          <canvas id="postsTrendChart"></canvas>
+        </div>
+        <div class="col-md-6 mb-4">
+          <canvas id="categoryPieChart"></canvas>
+        </div>
+      </div>
       </div>
     </div>
   </div>
