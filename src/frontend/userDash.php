@@ -149,7 +149,7 @@ $likedPosts = $likeQuery->get_result();
                         </div>
                     <?php endwhile; ?>
                 <?php else: ?>
-                    <p>You haven't liked any posts yet.</p>
+                    <p style="color: white;">You haven't liked any posts yet.</p>
                 <?php endif; ?>
             </div>
         </div>
