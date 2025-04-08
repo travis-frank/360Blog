@@ -2,7 +2,7 @@
 $host = "localhost";
 $username = "dsokic";
 $password = "dsokic";
-$database = "dsokic
+$database = "dsokic";
 ";
 // Enable error reporting for debugging
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
