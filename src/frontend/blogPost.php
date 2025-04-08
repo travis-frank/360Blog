@@ -77,6 +77,7 @@ $conn->close();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles/blogPost.css">
     <link rel="stylesheet" href="styles/nav.css">
+    <link rel="icon" type="image/png" href="../../Images/logo.png" />
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
@@ -86,8 +87,8 @@ $conn->close();
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="feed.php">Feed</a></li>
                 <li class="nav-item"><a class="nav-link" href="frontPage.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="feed.php">Feed</a></li>
                 <li class="nav-item"><a class="nav-link" href="userDash.php">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="createPost.php">Create Post</a></li>
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>

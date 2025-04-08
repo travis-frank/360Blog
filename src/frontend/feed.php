@@ -36,6 +36,7 @@ if ($filter) {
   <link rel="stylesheet" href="styles/frontPage.css" />
   <link rel="stylesheet" href="styles/feed.css" />
   <link rel="stylesheet" href="styles/nav.css" />
+  <link rel="icon" type="image/png" href="../../Images/logo.png" />
 </head>
 <body>
 
@@ -47,8 +48,8 @@ if ($filter) {
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="feed.php">Feed</a></li>
                 <li class="nav-item"><a class="nav-link" href="frontPage.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="feed.php">Feed</a></li>
                 <li class="nav-item"><a class="nav-link" href="userDash.php">Profile</a></li>
                 <li class="nav-item"><a class="nav-link" href="createPost.php">Create Post</a></li>
                 <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
